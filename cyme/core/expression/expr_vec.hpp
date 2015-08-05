@@ -414,6 +414,10 @@ namespace cyme{
         forceinline explicit rvec():expr_rep(){
         }
 
+        /** constructor rhs of the operator (for gather/scatter) */
+        forceinline explicit rvec(Rep const& rb, std::size_t *index):expr_rep(rb,index){
+        }
+
         /** constructor rhs of the operator= I do not save the pointer, as I read only the cyme on this side */
         forceinline explicit rvec(Rep const& rb):expr_rep(rb){
         }
@@ -520,6 +524,10 @@ namespace cyme{
 
         /*** Constructor lhs of the operator=, I save the data into the cyme after the computation */
         forceinline explicit wvec(pointer rb):data_pointer(rb),expr_rep(rb){
+        }
+
+        /** Constructor lhs of the operator= (for gather/scatter) */
+        forceinline explicit wvec(pointer rb, std::size_t *index):data_pointer(rb,index),expr_rep(rb,index){
         }
 
         /**
