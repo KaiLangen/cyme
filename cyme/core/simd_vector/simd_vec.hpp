@@ -96,6 +96,12 @@ namespace cyme{
 	/** Print function */
 	forceinline void print(std::ostream &out) const;
 
+	/** Gather function */
+	forceinline vec_simd& gather(pointer b, size_t *idx, size_t length);
+
+	/** Scatter function */
+	forceinline void scatter(pointer a, size_t *idx, size_t length) const;
+
 #ifdef __FMA__
         /** FMA operator */
         forceinline void ma(const vec_simd& lhs, const vec_simd& rhs);
