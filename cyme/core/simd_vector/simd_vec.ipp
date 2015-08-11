@@ -54,7 +54,7 @@ namespace cyme{
 
     template<class T,cyme::simd O, int N>
     vec_simd<T,O,N>::vec_simd(typename simd_trait<T,O,N>::const_pointer a, vec_simd<size_t,O,N> const& v){
-        xmm = _mm_gather<typename simd_trait<T,O,N>::value_type,O,N>(a,v.xmm);
+        xmm = gather<typename simd_trait<T,O,N>::value_type,O,N>(a,v.xmm);
     }
 
     template<class T,cyme::simd O, int N>

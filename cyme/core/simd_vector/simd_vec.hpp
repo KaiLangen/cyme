@@ -176,6 +176,10 @@ namespace cyme{
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> operator/ (const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs);
 
+    /** Free function to gather */
+    template<class T,cyme::simd O, int N>
+    forceinline vec_simd<T,O,N> gather(const_pointer a, vec_simd<std::size_t,O,N> const& v);
+
     /** Free function for call the reciprocal for the Newton-Raphson division (initialization only) */
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> rec(vec_simd<T,O,N> const& rhs);
@@ -231,6 +235,11 @@ namespace cyme{
     /** Free function for the tan */
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> tan(const vec_simd<T,O,N>& rhs);
+
+    //GATHER
+
+
+    //SCATTER
 
 #ifdef __FMA__
     /** Free function FMA between 3 vectors, a*b+c or c + a*B, + is commutative so no pb */
