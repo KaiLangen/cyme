@@ -64,13 +64,6 @@ namespace cyme{
 */
     enum order{AoS, AoSoA};
 
-/** Gather/Scatter native support
-*
-*  cyme::native defines whether gather/scatter operations are natively supported
-*  for this arch.
-*/
-    enum native{yes,no};
-
     #define __GETSIMD__() __CYME_SIMD_VALUE__
 
 /** Size of simd registers and memory alignment.
