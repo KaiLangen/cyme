@@ -173,6 +173,36 @@ namespace cyme{
                                                              _mm256_load_pd(a+8),_mm256_load_pd(a+12));
     }
 
+   /**
+     Load 256-bits (composed of 4 packed double-precision (64-bit) floating-point elements) from cyme into dst using
+     gather approach. mem_addr must be aligned on a 32-byte boundary or a general-protection exception will be generated.
+     specialisation double,cyme::avx, 1 regs
+    */
+    template<>
+    forceinline simd_trait<double,cyme::avx,1>::register_type // extra parameter for native avx
+    _mm_gather<double,cyme::avx,1>(simd_trait<double,cyme::avx,1>::const_pointer a,
+                                    const simd_trait<size_t,cyme::avx,1>::register_type xmm0){
+        return _mm256_maskload_pd(a,xmm0); //WRONG
+    }
+
+    template<>
+    forceinline simd_trait<double,cyme::avx,2>::register_type // extra parameter for native avx
+    _mm_gather<double,cyme::avx,2>(simd_trait<double,cyme::avx,2>::const_pointer a,
+                                   const simd_trait<size_t,cyme::avx,2>::register_type xmm0){
+        return simd_trait<double,cyme::avx,2>::register_type(_mm256_maskload_pd(a,xmm0.r0),
+                                                             _mm256_maskload_pd(a,xmm0.r1));
+    }
+
+    template<>
+    forceinline simd_trait<double,cyme::avx,4>::register_type // extra parameter for native avx
+    _mm_gather<double,cyme::avx,4>(simd_trait<double,cyme::avx,4>::const_pointer a,
+                                   const simd_trait<size_t,cyme::avx,4>::register_type xmm0){
+        return simd_trait<double,cyme::avx,4>::register_type(_mm256_maskload_pd(a,xmm0.r0),
+                                                             _mm256_maskload_pd(a,xmm0.r1),
+                                                             _mm256_maskload_pd(a,xmm0.r2),
+                                                             _mm256_maskload_pd(a,xmm0.r3));
+    }
+
     /**
       Store 256-bits (composed of 4 packed double-precision (64-bit) floating-point elements) from a into cyme.
       mem_addr must be aligned on a 32-byte boundary or a general-protection exception will be generated.
