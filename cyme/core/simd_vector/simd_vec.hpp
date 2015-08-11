@@ -63,6 +63,9 @@ namespace cyme{
         /** Construtor from a pointer */
         forceinline vec_simd(const_pointer a);
 
+	/**Constructor gather/scatter */
+        forceinline vec_simd(const_pointer a, vec_simd<std::size_t,O,N> const& v);
+
         /** Bracket operator called by the parser (expr_vec) */
         forceinline vec_simd& operator()();
 
@@ -95,12 +98,6 @@ namespace cyme{
 
 	/** Print function */
 	forceinline void print(std::ostream &out) const;
-
-	/** Gather function */
-	forceinline vec_simd& gather(pointer b, size_t *idx, size_t length);
-
-	/** Scatter function */
-	forceinline void scatter(pointer a, size_t *idx, size_t length) const;
 
 #ifdef __FMA__
         /** FMA operator */

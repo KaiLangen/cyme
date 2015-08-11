@@ -28,10 +28,8 @@
 #ifndef CYME_SIMD_VEC_IPP
 #define CYME_SIMD_VEC_IPP
 
-#include <assert.h>
-
 namespace cyme{
-   
+
     /** Round up to the next even integer */
     template<cyme::simd O, int N>
     vec_simd<int,O,N> round_up_even(const vec_simd<int,O,N>& rhs){
@@ -52,6 +50,11 @@ namespace cyme{
     template<class T,cyme::simd O, int N>
     vec_simd<T,O,N>::vec_simd(typename simd_trait<T,O,N>::const_pointer a){
         xmm = _mm_load<typename simd_trait<T,O,N>::value_type,O,N>(a);
+    }
+
+    template<class T,cyme::simd O, int N>
+    vec_simd<T,O,N>::vec_simd(typename simd_trait<T,O,N>::const_pointer a, vec_simd<size_t,O,N> const& v){
+        xmm = _mm_gather<typename simd_trait<T,O,N>::value_type,O,N>(a,v.xmm);
     }
 
     template<class T,cyme::simd O, int N>
@@ -160,48 +163,6 @@ namespace cyme{
         nrv.xmm = _mm_twok<typename simd_trait<T,O,N>::value_type,O,N>(rhs.xmm);
         return nrv;
     }
-
-    template<class T,cyme::simd O,cyme::native B, int N>
-    vec_simd<T,O,N>& gather(typename vec_simd<T,O,N>::pointer b, size_t *idx, size_t length){
-    }
-
-    template<class T,cyme::simd O, int N> 
-    vec_simd<T,O,N>&
-    gather<T,O,yes,N>(typename vec_simd<T,O,N>::pointer b, size_t *idx, size_t length){
-	_mm_gather(b, idx, length);
-    }
-
-    template<class T,cyme::simd O, int N> 
-    vec_simd<T,O,N>&
-    gather<T,O,no,N>(typename vec_simd<T,O,N>::pointer b, size_t *idx, size_t length){
-	const int size = elems_helper<T,N>::size;
-        T elems[size] __attribute__((aligned(static_cast<int>(cyme::trait_register<T,cyme::__GETSIMD__()>::size))));
-	for(unsigned int i = 0; i < size; i++){
-	    assert(idx[i] < length);
-	    elems[i] = b[idx[i]];
-	}
-        xmm = _mm_load<typename simd_trait<T,O,N>::value_type,O,N>(elems);
-	return *this;
-    }
-
-    template<class T,cyme::simd O,cyme::native B, int N>
-    void scatter(typename vec_simd<T,O,N>::pointer a, size_t *idx, size_t length) const{
-    }
-
-    template<class T,cyme::simd O, int N> 
-    void scatter<T,O,yes,N>(typename vec_simd<T,O,N>::pointer a, size_t *idx, size_t length) const{
-	_mm_scatter(b, idx, length);
-    }
-
-    template<class T,cyme::simd O, int N>
-    void scatter<T,O,no,N>(typename vec_simd<T,O,N>::pointer a, size_t *idx, size_t length) const{
-	const int size = elems_helper<T,N>::size;
-        T elems[size] __attribute__((aligned(static_cast<int>(cyme::trait_register<T,cyme::__GETSIMD__()>::size))));
-	store(elems);
-	for(unsigned int i = 0; i < size; i++){
-	    assert(idx[i] < length);
-	    a[idx[i]] = elems[i];
-	}
 
     template<class T,cyme::simd O, int N>
     vec_simd<T,O,N> fabs(const vec_simd<T,O,N>& rhs){

@@ -109,7 +109,6 @@ namespace cyme{
     #include "cyme/core/simd_vector/detail/powerpc64/trait_powerpc64.ipp"
 #endif
 
-
 #ifdef __MIC__
     #include "cyme/core/simd_vector/detail/mic/trait_mic.ipp"
 #endif

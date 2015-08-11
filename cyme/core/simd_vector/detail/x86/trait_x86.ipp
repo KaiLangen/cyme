@@ -46,6 +46,12 @@ namespace cyme{
         typedef __m128i trait_register_type;
     };
 
+    /** Specialisation of the trait class for the std::size_t, cyme::sse */
+    template<>
+    struct register_trait<std::size_t, cyme::sse>{
+        typedef __m128i trait_register_type;
+    };
+
     /** Specialisation of the trait class for float, cyme::sse  */
     template<>
     struct register_trait<float, cyme::sse>{
@@ -64,6 +70,11 @@ namespace cyme{
     struct register_trait<int, cyme::avx>{
         typedef __m256i trait_register_type;
     };
+
+    /** Specialisation of the trait class for the std::size_t, cyme::avx */
+    template<>
+    struct register_trait<std::size_t, cyme::avx>{
+        typedef __m256i trait_register_type;
 
     /** Specialisation of the trait class for float, cyme::avx  */
     template<>
@@ -129,6 +140,24 @@ namespace cyme{
     /** Specialisation of the trait class for the composite vector int,cyme::sse,1 reg*/
     template <>
     struct simd_trait<int, cyme::sse, 1> : trait<int>{
+        typedef __m128i register_type;
+    };
+
+    /** Specialisation of the trait class for the composite vector std::size_t,cyme::sse,4 regs*/
+    template <>
+    struct simd_trait<std::size_t, cyme::sse, 4> : trait<std::size_t>{
+        typedef simd_unroll<std::size_t, cyme::sse, 4> register_type;
+    };
+
+    /** Specialisation of the trait class for the composite vector sd::size_t,cyme::sse,2 regs*/
+    template <>
+    struct simd_trait<std::size_t, cyme::sse, 2> : trait<std::size_t>{
+        typedef simd_unroll<std::size_t,  cyme::sse, 2> register_type;
+    };
+
+    /** Specialisation of the trait class for the composite vector std::size_t,cyme::sse,1 reg*/
+    template <>
+    struct simd_trait<std::size_t, cyme::sse, 1> : trait<std::size_t>{
         typedef __m128i register_type;
     };
 
@@ -232,6 +261,24 @@ namespace cyme{
     /** Specialisation of the trait class for the composite vector int,cyme::avx,1 reg*/
     template <>
     struct simd_trait<int, cyme::avx, 1> : trait<int>{
+        typedef __m256i register_type;
+    };
+
+    /** Specialisation of the trait class for the composite vector std::size_t,cyme::avx,4 regs*/
+    template <>
+    struct simd_trait<std::size_t, cyme::avx, 4> : trait<std::size_t>{
+        typedef simd_unroll<std::size_t, cyme::avx, 4> register_type;
+    };
+
+    /** Specialisation of the trait class for the composite vector std::size_t,cyme::avx,2 regs*/
+    template <>
+    struct simd_trait<std::size_t, cyme::avx, 2> : trait<std::size_t>{
+        typedef simd_unroll<std::size_t,  cyme::avx, 2> register_type;
+    };
+
+    /** Specialisation of the trait class for the composite vector std::size_t,cyme::avx,1 reg*/
+    template <>
+    struct simd_trait<std::size_t, cyme::avx, 1> : trait<std::size_t>{
         typedef __m256i register_type;
     };
 #endif

@@ -105,6 +105,12 @@ namespace cyme{
 
          inline const cyme::rvec<T,cyme::__GETSIMD__()> operator[](size_type i) const;
 
+	/** gather/scatter */
+         inline cyme::wvec<T,cyme::__GETSIMD__()> operator[](cyme::rvec<size_type,cyme::__GETSIMD__()> const& v);
+
+	/** gather/scatter */
+         inline const cyme::rvec<T,cyme::__GETSIMD__()> operator[](cyme::rvec<size_type,cyme::__GETSIMD__()> const& v) const;
+
          /** return cyme layout of the container */
          static const cyme::order MemoryOrder = AoSoA;
 
