@@ -585,11 +585,7 @@ namespace cyme{
 
 	/**constructor rhs for the gather/scatter */
 	forceinline explicit wvec(pointer rb, rvec<int,O,N,vec_simd<int,O,N> > const& v):expr_rep(rb,v){
-}
-
-        /** Constructor lhs of the operator= (for gather/scatter) */
-        forceinline explicit wvec(pointer rb, std::size_t *index):data_pointer(rb,index),expr_rep(rb,index){
-        }
+	}
 
         /**
         RAII for the store. Altough, we do not allocate cyme, we allocate a SIMD register.
