@@ -75,6 +75,7 @@ namespace cyme{
     template<>
     struct register_trait<std::size_t, cyme::avx>{
         typedef __m256i trait_register_type;
+    };
 
     /** Specialisation of the trait class for float, cyme::avx  */
     template<>

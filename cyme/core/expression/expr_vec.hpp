@@ -480,7 +480,7 @@ namespace cyme{
 
         /** constructor rhs for the gather/scatter */
         forceinline explicit rvec(const_pointer rb, 
-				  rvec<size_t,O,N,vec_simd> > const& v):expr_rep(rb,v){
+				  rvec<size_t,O,N,vec_simd<size_t,O,N> > const& v):expr_rep(rb,v.rep()){
         }
 
         /** constructor for a given value */

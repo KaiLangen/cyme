@@ -48,7 +48,7 @@ namespace cyme{
     /** Free function (wrapper) for loading data into registers using gather instructions */
     template<class T, cyme::simd O, int N>
     forceinline typename simd_trait<T,O,N>::register_type _mm_gather(typename simd_trait<T,O,N>::const_pointer a,
-								     typename simd_trait<T,O,N>::register_type xmm0);
+								     const typename simd_trait<size_t,O,N>::register_type xmm0);
 
     /** Free function (wrapper) for storing the data in the cyme (pointer)
     \warning The data must be aligned or else there will be a SEGFAULT

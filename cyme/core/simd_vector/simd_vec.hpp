@@ -28,7 +28,6 @@
 #define CYME_SIMD_VEC_HPP
 
 #include <iostream>
-
 #include "cyme/core/simd_vector/trait.hpp"
 #include "cyme/core/simd_vector/simd_wrapper.hpp"
 namespace cyme{
@@ -178,7 +177,7 @@ namespace cyme{
 
     /** Free function to gather */
     template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> gather(const_pointer a, vec_simd<std::size_t,O,N> const& v);
+    forceinline vec_simd<T,O,N> gather(typename simd_trait<T,O,N>::const_pointer a, vec_simd<std::size_t,O,N> const& v);
 
     /** Free function for call the reciprocal for the Newton-Raphson division (initialization only) */
     template<class T,cyme::simd O, int N>
@@ -235,9 +234,6 @@ namespace cyme{
     /** Free function for the tan */
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> tan(const vec_simd<T,O,N>& rhs);
-
-    //GATHER
-
 
     //SCATTER
 
