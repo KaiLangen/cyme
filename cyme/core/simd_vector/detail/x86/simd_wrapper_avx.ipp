@@ -181,26 +181,36 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::avx,1>::register_type // extra parameter for native avx
     _mm_gather<double,cyme::avx,1>(simd_trait<double,cyme::avx,1>::const_pointer a,
-                                    const simd_trait<size_t,cyme::avx,1>::register_type xmm0){
-        return _mm256_maskload_pd(a,xmm0); //WRONG
+                                   const simd_trait<size_t,cyme::avx,1>::register_type xmm0){
+        return _mm256_i32gather_pd(a,xmm0,1);
     }
 
+   /**
+     Load 256-bits (composed of 4 packed double-precision (64-bit) floating-point elements) from cyme into dst using
+     gather approach. mem_addr must be aligned on a 32-byte boundary or a general-protection exception will be generated.
+     specialisation double,cyme::avx, 2 regs
+    */
     template<>
     forceinline simd_trait<double,cyme::avx,2>::register_type // extra parameter for native avx
     _mm_gather<double,cyme::avx,2>(simd_trait<double,cyme::avx,2>::const_pointer a,
                                    const simd_trait<size_t,cyme::avx,2>::register_type xmm0){
-        return simd_trait<double,cyme::avx,2>::register_type(_mm256_maskload_pd(a,xmm0.r0),
-                                                             _mm256_maskload_pd(a,xmm0.r1));
+        return simd_trait<double,cyme::avx,2>::register_type(_mm256_i32gather_pd(a,xmm0.r0,1),
+        						     _mm256_i32gather_pd(a,xmm0.r1,1));
     }
 
+   /**
+     Load 256-bits (composed of 4 packed double-precision (64-bit) floating-point elements) from cyme into dst using
+     gather approach. mem_addr must be aligned on a 32-byte boundary or a general-protection exception will be generated.
+     specialisation double,cyme::avx, 4 regs
+    */
     template<>
     forceinline simd_trait<double,cyme::avx,4>::register_type // extra parameter for native avx
     _mm_gather<double,cyme::avx,4>(simd_trait<double,cyme::avx,4>::const_pointer a,
                                    const simd_trait<size_t,cyme::avx,4>::register_type xmm0){
-        return simd_trait<double,cyme::avx,4>::register_type(_mm256_maskload_pd(a,xmm0.r0),
-                                                             _mm256_maskload_pd(a,xmm0.r1),
-                                                             _mm256_maskload_pd(a,xmm0.r2),
-                                                             _mm256_maskload_pd(a,xmm0.r3));
+        return simd_trait<double,cyme::avx,4>::register_type(_mm256_i32gather_pd(a,xmm0.r0,1),
+                                                             _mm256_i32gather_pd(a,xmm0.r1,1),
+        						     _mm256_i32gather_pd(a,xmm0.r2,1),
+        						     _mm256_i32gather_pd(a,xmm0.r3,1));
     }
 
     /**
@@ -1699,6 +1709,47 @@ namespace cyme{
         return simd_trait<float,cyme::avx,4>::register_type(_mm256_load_ps(a),_mm256_load_ps(a+8),
                                                             _mm256_load_ps(a+16),_mm256_load_ps(a+24));
     }
+
+   /**
+     Load 256-bits (composed of 4 packed single-precision (32-bit) floating-point elements) from cyme into dst using
+     gather approach. mem_addr must be aligned on a 32-byte boundary or a general-protection exception will be generated.
+     specialisation float,cyme::avx, 1 regs
+    */
+    template<>
+    forceinline simd_trait<float,cyme::avx,1>::register_type // extra parameter for native avx
+    _mm_gather<float,cyme::avx,1>(simd_trait<float,cyme::avx,1>::const_pointer a,
+                                  const simd_trait<size_t,cyme::avx,1>::register_type xmm0){
+        return _mm256_i32gather_ps(a,xmm0,1);
+    }
+
+   /**
+     Load 256-bits (composed of 4 packed single-precision (32-bit) floating-point elements) from cyme into dst using
+     gather approach. mem_addr must be aligned on a 32-byte boundary or a general-protection exception will be generated.
+     specialisation float,cyme::avx, 2 regs
+    */
+    template<>
+    forceinline simd_trait<float,cyme::avx,2>::register_type // extra parameter for native avx
+    _mm_gather<float,cyme::avx,2>(simd_trait<float,cyme::avx,2>::const_pointer a,
+                                  const simd_trait<size_t,cyme::avx,2>::register_type xmm0){
+        return simd_trait<float,cyme::avx,2>::register_type(_mm256_i32gather_ps(a,xmm0.r0,1),
+        						    _mm256_i32gather_ps(a,xmm0.r1,1));
+    }
+
+   /**
+     Load 256-bits (composed of 4 packed single-precision (32-bit) floating-point elements) from cyme into dst using
+     gather approach. mem_addr must be aligned on a 32-byte boundary or a general-protection exception will be generated.
+     specialisation float,cyme::avx, 4 regs
+    */
+    template<>
+    forceinline simd_trait<float,cyme::avx,4>::register_type // extra parameter for native avx
+    _mm_gather<float,cyme::avx,4>(simd_trait<float,cyme::avx,4>::const_pointer a,
+                                  const simd_trait<size_t,cyme::avx,4>::register_type xmm0){
+        return simd_trait<float,cyme::avx,4>::register_type(_mm256_i32gather_ps(a,xmm0.r0,1),
+                                                            _mm256_i32gather_ps(a,xmm0.r1,1),
+        						    _mm256_i32gather_ps(a,xmm0.r2,1),
+        						    _mm256_i32gather_ps(a,xmm0.r3,1));
+    }
+
 
     /**
       Store 256-bits (composed of 8 packed single-precision (32-bit) floating-point elements) from a into cyme.
