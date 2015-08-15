@@ -39,8 +39,6 @@
 #ifndef CYME_EXPR_VEC_HPP
 #define CYME_EXPR_VEC_HPP
 
-#include <iostream>
-
 namespace cyme{
     /** \cond */
     //forward declarations

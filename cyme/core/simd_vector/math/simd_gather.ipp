@@ -35,9 +35,11 @@ namespace cyme{
         static forceinline vec_simd<T,O,N> gather(typename simd_trait<T,O,N>::const_pointer a, vec_simd<std::size_t,O,N> const& v){
             const std::size_t size = elems_helper<T,N>::size;
             T elems[size] __attribute__((aligned(static_cast<std::size_t>(cyme::trait_register<T,cyme::__GETSIMD__()>::size))));
+            size_t V[size] __attribute__((aligned(static_cast<std::size_t>(cyme::trait_register<T,cyme::__GETSIMD__()>::size))));
+	    _mm_store<size_t,O,N>(v.xmm,V);
             for(std::size_t i = 0; i < size; i++){
 //		assert(idx[i] < length);
-		elems[i] = a[v[i]];
+		elems[i] = a[V[i]];
             }	
             vec_simd<T,O,N> nrv(_mm_load<typename simd_trait<T,O,N>::value_type,O,N>(elems));
             return nrv;
