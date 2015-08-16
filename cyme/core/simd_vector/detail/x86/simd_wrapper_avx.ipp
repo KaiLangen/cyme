@@ -26,58 +26,9 @@
 
 #ifndef CYME_SIMD_WRAPPER_AVX_IPP
 #define CYME_SIMD_WRAPPER_AVX_IPP
-
 #include <assert.h>
 namespace cyme{
-
-    template<>
-    forceinline simd_trait<size_t,cyme::avx,1>::register_type
-    _mm_load<size_t,cyme::avx,1>(simd_trait<size_t,cyme::avx,1>::const_pointer a){
-        return _mm256_load_si256((__m256i *)a);
-    }
-
-    template<>
-    forceinline simd_trait<size_t,cyme::avx,2>::register_type
-    _mm_load<size_t,cyme::avx,2>(simd_trait<size_t,cyme::avx,2>::const_pointer a){
-        return simd_trait<size_t,cyme::avx,2>::register_type(_mm256_load_si256((__m256i *)a),
-                                                             _mm256_load_si256((__m256i *)a+4));
-    }
-
-    template<>
-    forceinline simd_trait<size_t,cyme::avx,4>::register_type
-    _mm_load<size_t,cyme::avx,4>(simd_trait<size_t,cyme::avx,4>::const_pointer a){
-        return simd_trait<size_t,cyme::avx,4>::register_type(_mm256_load_si256((__m256i *)a),
-                                                             _mm256_load_si256((__m256i *)a+4),
-                                                             _mm256_load_si256((__m256i *)a+8),
-                                                             _mm256_load_si256((__m256i *)a+12));
-    }
-
-    template<>
-    forceinline void
-    _mm_store<size_t,cyme::avx,1>(simd_trait<size_t,cyme::avx,1>::register_type xmm0,
-                                  simd_trait<size_t,cyme::avx,1>::pointer a){
-        _mm256_store_si256((__m256i *)a,xmm0);
-    }
-
-    template<>
-    forceinline void
-    _mm_store<size_t,cyme::avx,2>(simd_trait<size_t,cyme::avx,2>::register_type xmm0,
-                                  simd_trait<size_t,cyme::avx,2>::pointer a){
-        _mm256_store_si256((__m256i *)a,xmm0.r0);
-        _mm256_store_si256((__m256i *)a+4,xmm0.r1);
-    }
-
-    template<>
-    forceinline void
-    _mm_store<size_t,cyme::avx,4>(simd_trait<size_t,cyme::avx,4>::register_type xmm0,
-                                  simd_trait<size_t,cyme::avx,4>::pointer a){
-        _mm256_store_si256((__m256i *)a,xmm0.r0);
-        _mm256_store_si256((__m256i *)a+4,xmm0.r1);
-        _mm256_store_si256((__m256i *)a+8,xmm0.r2);
-        _mm256_store_si256((__m256i *)a+12,xmm0.r3);
-    }
-
-    /**
+   /**
       Rounds xmm0 up to the next even integer.
       Specialisation int, cyme::avx, 1 reg
     */
@@ -156,6 +107,54 @@ namespace cyme{
 							  xmm0.r2,xmm0.r3);
     }
 
+    template<>
+    forceinline simd_trait<std::size_t,cyme::avx,1>::register_type
+    _mm_load<std::size_t,cyme::avx,1>(simd_trait<std::size_t,cyme::avx,1>::const_pointer a){
+        return _mm256_load_si256((__m256i *)a);
+    }
+
+    template<>
+    forceinline simd_trait<size_t,cyme::avx,2>::register_type
+    _mm_load<std::size_t,cyme::avx,2>(simd_trait<std::size_t,cyme::avx,2>::const_pointer a){
+        return simd_trait<std::size_t,cyme::avx,2>::register_type(_mm256_load_si256((__m256i *)a),
+                                                             _mm256_load_si256((__m256i *)a+4));
+    }
+
+    template<>
+    forceinline simd_trait<std::size_t,cyme::avx,4>::register_type
+    _mm_load<std::size_t,cyme::avx,4>(simd_trait<std::size_t,cyme::avx,4>::const_pointer a){
+        return simd_trait<std::size_t,cyme::avx,4>::register_type(_mm256_load_si256((__m256i *)a),
+                                                             _mm256_load_si256((__m256i *)a+4),
+                                                             _mm256_load_si256((__m256i *)a+8),
+                                                             _mm256_load_si256((__m256i *)a+12));
+    }
+
+    template<>
+    forceinline void
+    _mm_store<std::size_t,cyme::avx,1>(simd_trait<std::size_t,cyme::avx,1>::register_type xmm0,
+                                  simd_trait<std::size_t,cyme::avx,1>::pointer a){
+        _mm256_store_si256((__m256i *)a,xmm0);
+    }
+
+    template<>
+    forceinline void
+    _mm_store<std::size_t,cyme::avx,2>(simd_trait<std::size_t,cyme::avx,2>::register_type xmm0,
+                                  simd_trait<std::size_t,cyme::avx,2>::pointer a){
+        _mm256_store_si256((__m256i *)a,xmm0.r0);
+        _mm256_store_si256((__m256i *)a+4,xmm0.r1);
+    }
+
+    template<>
+    forceinline void
+    _mm_store<std::size_t,cyme::avx,4>(simd_trait<std::size_t,cyme::avx,4>::register_type xmm0,
+                                  simd_trait<std::size_t,cyme::avx,4>::pointer a){
+        _mm256_store_si256((__m256i *)a,xmm0.r0);
+        _mm256_store_si256((__m256i *)a+4,xmm0.r1);
+        _mm256_store_si256((__m256i *)a+8,xmm0.r2);
+        _mm256_store_si256((__m256i *)a+12,xmm0.r3);
+    }
+
+ 
    /**
       Broadcast a double-precision (64-bit) floating-point element from cyme to all elements of dst.
       specialisation double,cyme::avx, 1 regs
@@ -1696,6 +1695,53 @@ namespace cyme{
                                                              _mm256_fnmsub_pd(xmm0.r3, xmm1.r3, xmm2.r3));
     }
 #endif //end FMA
+
+    template<>
+    forceinline simd_trait<int,cyme::avx,1>::register_type
+    _mm_load<int,cyme::avx,1>(simd_trait<int,cyme::avx,1>::const_pointer a){
+        return _mm256_load_si256((__m256i *)a);
+    }
+
+    template<>
+    forceinline simd_trait<int,cyme::avx,2>::register_type
+    _mm_load<int,cyme::avx,2>(simd_trait<int,cyme::avx,2>::const_pointer a){
+        return simd_trait<int,cyme::avx,2>::register_type(_mm256_load_si256((__m256i *)a),
+                                                             _mm256_load_si256((__m256i *)a+4));
+    }
+
+    template<>
+    forceinline simd_trait<int,cyme::avx,4>::register_type
+    _mm_load<int,cyme::avx,4>(simd_trait<int,cyme::avx,4>::const_pointer a){
+        return simd_trait<int,cyme::avx,4>::register_type(_mm256_load_si256((__m256i *)a),
+                                                             _mm256_load_si256((__m256i *)a+4),
+                                                             _mm256_load_si256((__m256i *)a+8),
+                                                             _mm256_load_si256((__m256i *)a+12));
+    }
+
+    template<>
+    forceinline void
+    _mm_store<int,cyme::avx,1>(simd_trait<int,cyme::avx,1>::register_type xmm0,
+                                  simd_trait<int,cyme::avx,1>::pointer a){
+        _mm256_store_si256((__m256i *)a,xmm0);
+    }
+
+    template<>
+    forceinline void
+    _mm_store<int,cyme::avx,2>(simd_trait<int,cyme::avx,2>::register_type xmm0,
+                                  simd_trait<int,cyme::avx,2>::pointer a){
+        _mm256_store_si256((__m256i *)a,xmm0.r0);
+        _mm256_store_si256((__m256i *)a+4,xmm0.r1);
+    }
+
+    template<>
+    forceinline void
+    _mm_store<int,cyme::avx,4>(simd_trait<int,cyme::avx,4>::register_type xmm0,
+                                  simd_trait<int,cyme::avx,4>::pointer a){
+        _mm256_store_si256((__m256i *)a,xmm0.r0);
+        _mm256_store_si256((__m256i *)a+4,xmm0.r1);
+        _mm256_store_si256((__m256i *)a+8,xmm0.r2);
+        _mm256_store_si256((__m256i *)a+12,xmm0.r3);
+    }
 
     /**
       Broadcast a single-precision (32-bit) floating-point element from cyme to all elements of dst.

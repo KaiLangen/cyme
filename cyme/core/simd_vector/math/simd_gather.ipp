@@ -29,14 +29,16 @@
 #ifndef CYME_SIMD_GATHER_IPP
 #define CYME_SIMD_GATHER_IPP
 
+#define __UINT__ typename trait_integer<T>::integer
+
 namespace cyme{
     template<class T,cyme::simd O, int N>
     struct cyme_gather{
-        static forceinline vec_simd<T,O,N> gather(typename simd_trait<T,O,N>::const_pointer a, vec_simd<std::size_t,O,N> const& v){
+        static forceinline vec_simd<T,O,N> gather(typename simd_trait<T,O,N>::const_pointer a, vec_simd<__UINT__,O,N> const& v){
             const std::size_t size = elems_helper<T,N>::size;
             T elems[size] __attribute__((aligned(static_cast<std::size_t>(cyme::trait_register<T,cyme::__GETSIMD__()>::size))));
-            size_t V[size] __attribute__((aligned(static_cast<std::size_t>(cyme::trait_register<T,cyme::__GETSIMD__()>::size))));
-	    _mm_store<size_t,O,N>(v.xmm,V);
+            __UINT__ V[size] __attribute__((aligned(static_cast<std::size_t>(cyme::trait_register<T,cyme::__GETSIMD__()>::size))));
+	    _mm_store<__UINT__,O,N>(v.xmm,V);
             for(std::size_t i = 0; i < size; i++){
 //		assert(idx[i] < length);
 		elems[i] = a[V[i]];
@@ -48,7 +50,7 @@ namespace cyme{
  
     /** Free function for call the vendor gather */
     template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> gather_v(typename simd_trait<T,O,N>::const_pointer a, vec_simd<std::size_t,O,N> const& v){
+    forceinline vec_simd<T,O,N> gather_v(typename simd_trait<T,O,N>::const_pointer a, vec_simd<__UINT__,O,N> const& v){
         vec_simd<T,O,N> nrv(_mm_gather<T,O,N>(a,v.xmm));
         return nrv;
     }
@@ -56,7 +58,7 @@ namespace cyme{
     /** Function object for the vendor gather algorithm */
     template<class T,cyme::simd O, int N>
     struct Vendor_gather{
-        static forceinline vec_simd<T,O,N> gather(typename simd_trait<T,O,N>::const_pointer a, vec_simd<std::size_t,O,N> const& v){
+        static forceinline vec_simd<T,O,N> gather(typename simd_trait<T,O,N>::const_pointer a, vec_simd<__UINT__,O,N> const& v){
             return gather_v(a,v); /* call vendor wrapper */
         }
     };
@@ -64,15 +66,17 @@ namespace cyme{
     /** Selector for the gather algorithm (vendor or cyme implementation) */
     template<class T,cyme::simd O, int N, class Solver = cyme_gather<T,O,N> >
     struct Selector_gather{
-         static forceinline vec_simd<T,O,N> gather(typename simd_trait<T,O,N>::const_pointer a, vec_simd<std::size_t,O,N> const& v){
+         static forceinline vec_simd<T,O,N> gather(typename simd_trait<T,O,N>::const_pointer a, vec_simd<__UINT__,O,N> const& v){
                return Solver::gather(a,v);
          }
     };
 
     /** free function for gather */
     template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> gather(typename simd_trait<T,O,N>::const_pointer a, vec_simd<std::size_t,O,N> const& v){
+    forceinline vec_simd<T,O,N> gather(typename simd_trait<T,O,N>::const_pointer a, vec_simd<__UINT__,O,N> const& v){
         return Selector_gather<T,O,N>::gather(a,v);
     }
 }
+
+#undef __UINT__
 #endif

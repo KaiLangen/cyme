@@ -463,6 +463,7 @@ namespace cyme{
         typedef value_type* pointer;
         typedef value_type const* const_pointer;
         typedef Rep base_type;
+        typedef typename trait_integer<T>::integer integer_type;
 
         /** default constructor nothing special */
         forceinline explicit rvec():expr_rep(){
@@ -478,7 +479,7 @@ namespace cyme{
 
         /** constructor rhs for the gather/scatter */
         forceinline explicit rvec(const_pointer rb, 
-				  rvec<size_t,O,N,vec_simd<size_t,O,N> > const& v):expr_rep(rb,v.rep()){
+				  rvec<integer_type,O,N,vec_simd<integer_type,O,N> > const& v):expr_rep(rb,v.rep()){
         }
 
         /** constructor for a given value */

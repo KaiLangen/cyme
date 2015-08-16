@@ -86,6 +86,7 @@ namespace cyme{
          typedef const pointer*    const_pointer;
          typedef value_type&       reference;
          typedef const value_type& const_reference;
+         typedef typename trait_integer<T>::integer integer_type;
 
          static const int size = Size;
 
@@ -106,10 +107,10 @@ namespace cyme{
          inline const cyme::rvec<T,cyme::__GETSIMD__()> operator[](size_type i) const;
 
 	/** gather/scatter */
-         inline cyme::wvec<T,cyme::__GETSIMD__()> operator[](cyme::rvec<size_type,cyme::__GETSIMD__()> const& v);
+         inline cyme::wvec<T,cyme::__GETSIMD__()> operator[](cyme::rvec<integer_type,cyme::__GETSIMD__()> const& v);
 
 	/** gather/scatter */
-         inline const cyme::rvec<T,cyme::__GETSIMD__()> operator[](cyme::rvec<size_type,cyme::__GETSIMD__()> const& v) const;
+         inline const cyme::rvec<T,cyme::__GETSIMD__()> operator[](cyme::rvec<integer_type,cyme::__GETSIMD__()> const& v) const;
 
          /** return cyme layout of the container */
          static const cyme::order MemoryOrder = AoSoA;

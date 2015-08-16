@@ -28,6 +28,30 @@
 #define CYME_TRAIT_HPP
 
 namespace cyme{
+
+    template<typename T>
+    struct trait_integer;
+
+    template<>
+    struct trait_integer<int>{
+	typedef int integer;
+    };
+
+    template<>
+    struct trait_integer<float>{
+	typedef int integer;
+    };
+
+    template<>
+    struct trait_integer<std::size_t>{
+	typedef std::size_t integer;
+    };
+
+    template<>
+    struct trait_integer<double>{
+	typedef std::size_t integer;
+    };
+
     /** Basic trait to avoid duplication
     \warning The trait class does not check the validity of your type, only float-double
     */

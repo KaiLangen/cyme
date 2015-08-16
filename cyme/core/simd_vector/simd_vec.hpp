@@ -63,7 +63,7 @@ namespace cyme{
         forceinline vec_simd(const_pointer a);
 
 	/**Constructor gather/scatter */
-        forceinline vec_simd(const_pointer a, vec_simd<std::size_t,O,N> const& v);
+        forceinline vec_simd(const_pointer a, vec_simd<typename trait_integer<T>::integer,O,N> const& v);
 
         /** Bracket operator called by the parser (expr_vec) */
         forceinline vec_simd& operator()();
@@ -177,7 +177,7 @@ namespace cyme{
 
     /** Free function to gather */
     template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> gather(typename simd_trait<T,O,N>::const_pointer a, vec_simd<std::size_t,O,N> const& v);
+    forceinline vec_simd<T,O,N> gather(typename simd_trait<T,O,N>::const_pointer a, vec_simd<typename trait_integer<T>::integer,O,N> const& v);
 
     /** Free function for call the reciprocal for the Newton-Raphson division (initialization only) */
     template<class T,cyme::simd O, int N>

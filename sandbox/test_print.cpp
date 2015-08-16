@@ -36,13 +36,13 @@ void init(B& b){
 }
 
 int main(int argc, char *argv[]){
-    cyme::vector<synapse<size_t,8>,cyme::AoSoA> b(32);
-    cyme::vector<synapse<double,8>,cyme::AoSoA> c(32);
+    cyme::vector<synapse<int,8>,cyme::AoSoA> b(32);
+    cyme::vector<synapse<float,8>,cyme::AoSoA> c(32);
 
     init(b);
     init(c);
-    cyme::vector<synapse<size_t,8>,cyme::AoSoA>::const_iterator it1 = b.begin();
-    cyme::vector<synapse<double,8>,cyme::AoSoA>::const_iterator it2 = c.begin();
+    cyme::vector<synapse<int,8>,cyme::AoSoA>::const_iterator it1 = b.begin();
+    cyme::vector<synapse<float,8>,cyme::AoSoA>::const_iterator it2 = c.begin();
 
 
     std::cout << (*it2)[(*it1)[0]] << std::endl;
