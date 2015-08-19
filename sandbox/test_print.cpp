@@ -27,26 +27,58 @@ struct synapse{
    static const size_t value_size = M;
 };
 
-template<class B>
-void init(B& b){
-    for(std::size_t i=0; i<b.size(); ++i)
-        for(std::size_t j=0; j<b.size_block(); ++j){
-             b(i,j) = rand()%10;
-        };
+template<class T>
+T random();
+
+template<>
+int random<int>(){
+    return rand()%6;
+};
+
+template<>
+float random<float>(){
+    return drand48();
+};
+
+template<class Ba, class Bb> // m and n are differents into the block that why I passe like argument
+void init(Ba& block_a, Bb& block_b){
+    typedef typename Ba::value_type value_type;
+    for(std::size_t i=0; i<block_a.size(); ++i)
+        for(std::size_t j=0; j<block_a.size_block(); ++j){
+            block_a(i,j) = random<value_type>();
+            block_b(i,j) = block_a(i,j);
+        }
 }
 
 int main(int argc, char *argv[]){
-    cyme::vector<synapse<int,8>,cyme::AoSoA> b(32);
-    cyme::vector<synapse<float,8>,cyme::AoSoA> c(32);
+    cyme::vector<synapse<int,6>,cyme::AoSoA> b_AOSOA(32);
+    cyme::vector<synapse<float,6>,cyme::AoSoA> c_AOSOA(32);
 
-    init(b);
-    init(c);
-    cyme::vector<synapse<int,8>,cyme::AoSoA>::const_iterator it1 = b.begin();
-    cyme::vector<synapse<float,8>,cyme::AoSoA>::const_iterator it2 = c.begin();
+    cyme::vector<synapse<int,6>,cyme::AoS> b_AOS(32);
+    cyme::vector<synapse<float,6>,cyme::AoS> c_AOS(32);
+    // The init was wrong, and I shoud write a special functor for AOSOA
+    // we need a AOS to do the initialisation
+    // it is super messy and hgard to understand
+    init(b_AOS,b_AOSOA);
+    init(c_AOS,c_AOSOA);
 
+    {
+        cyme::vector<synapse<int,6>,cyme::AoSoA>::const_iterator it1 = b_AOSOA.begin();
+        cyme::vector<synapse<float,6>,cyme::AoSoA>::const_iterator it2 = c_AOSOA.begin();
 
-    std::cout << (*it2)[(*it1)[0]] << std::endl;
-//    std::cout << (*it1)[0] << std::endl;
-//    std::cout << (*it2)[5] << std::endl;
+        std::cout << (*it2)[0] << std::endl;
+        std::cout << (*it1)[0] << std::endl;
+        std::cout << (*it2)[(*it1)[0]] << std::endl;
+    }
+    {
+        cyme::vector<synapse<int,6>,cyme::AoS>::const_iterator it1 = b_AOS.begin();
+        cyme::vector<synapse<float,6>,cyme::AoS>::const_iterator it2 = c_AOS.begin();
+
+        std::cout << (*it2)[0] << std::endl;
+        std::cout << (*it1)[0] << std::endl;
+        std::cout << (*it2)[(*it1)[0]] << std::endl;
+    }
+
     return 0;
 };
+
