@@ -107,7 +107,7 @@ namespace cyme{
          inline const cyme::rvec<T,cyme::__GETSIMD__()> operator[](size_type i) const;
 
 	/** gather/scatter */
-         inline cyme::wvec<T,cyme::__GETSIMD__()> operator[](cyme::rvec<integer_type,cyme::__GETSIMD__()> const& v);
+         inline cyme::wvec<T,cyme::__GETSIMD__(),true> operator[](cyme::rvec<integer_type,cyme::__GETSIMD__()> const& v);
 
 	/** gather/scatter */
          inline const cyme::rvec<T,cyme::__GETSIMD__()> operator[](cyme::rvec<integer_type,cyme::__GETSIMD__()> const& v) const;

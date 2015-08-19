@@ -561,6 +561,28 @@ namespace cyme{
         Rep expr_rep;
     };
 
+
+
+
+    template <bool, typename T, cyme::simd O, int N, class Rep = vec_simd<T,O,N> >
+    struct enable_if{};
+
+    template <typename T, cyme::simd O, int N, class Rep >
+    struct enable_if<true, T, O, N, Rep> {
+        typedef typename trait_integer<T>::integer integer_type;
+        typedef T* pointer; 
+
+	enable_if(cyme::vec_simd<integer_type,O,N> const& u, pointer rb):v(u),expr_rep(rb){}
+	~enable_if(){
+	    gather(expr_rep, v.rep());
+	}
+
+    public: 
+	cyme::vec_simd<integer_type,O,N> v;
+	Rep expr_rep;
+    };
+
+
     /** write vector used during the construction of the DAG, lhs only !
 
     This class is an "interface" between the iterator and the computation
@@ -570,12 +592,13 @@ namespace cyme{
 
     \remark The wrec keep trace of the pointer of the input.
     */
-    template<class T, cyme::simd O, int N = cyme::unroll_factor::N, class Rep = vec_simd<T,O,N> >
-    class wvec{
+    template<class T, cyme::simd O, bool B = false, int N = cyme::unroll_factor::N, class Rep = vec_simd<T,O,N> >
+    class wvec : public enable_if<B,T,O,N>{
         public:
         typedef rvec<T,O,N,Rep> V;
         typedef T value_type;
         typedef value_type* pointer;
+        typedef typename trait_integer<T>::integer integer_type;
         typedef Rep base_type;
 
         /*** Constructor lhs of the operator=, I save the data into the cyme after the computation */
@@ -583,16 +606,16 @@ namespace cyme{
         }
 
 	/**constructor rhs for the gather/scatter */
-	forceinline explicit wvec(pointer rb, rvec<int,O,N,vec_simd<int,O,N> > const& v):expr_rep(rb,v){
+	forceinline explicit wvec(pointer rb, cyme::vec_simd<integer_type,O,N> const& u):enable_if<B,T,O,N>(u,rb),expr_rep(rb){
 	}
 
         /**
         RAII for the store. Altough, we do not allocate cyme, we allocate a SIMD register.
         If not rewrite this command after the tree creation into the +=, *=, etc ....
         */
-        ~wvec(){
-            expr_rep.store(data_pointer); //store the SIMD register into main cyme
-        }
+	~wvec(){
+	    expr_rep.store(data_pointer); //store the SIMD register into main cyme
+	}
 
         /**
         operator= initializes the wvec to a given value. The full vector has
@@ -699,15 +722,15 @@ namespace cyme{
 
 /** Ostream operators for rvec and wvec*/
 /**wvec*/
-template<class T, cyme::simd O, int N, class Rep>
-forceinline std::ostream &operator<<(std::ostream &out, const cyme::wvec<T,O,N,Rep> &vec){
+template<class T, cyme::simd O>
+forceinline std::ostream &operator<<(std::ostream &out, const cyme::wvec<T,O> &vec){
 	vec.print(out);
 	return out;
 }
 
 /**rvec*/
-template<class T, cyme::simd O, int N, class Rep>
-forceinline std::ostream &operator<<(std::ostream &out, const cyme::rvec<T,O,N,Rep> &vec){
+template<class T, cyme::simd O>
+forceinline std::ostream &operator<<(std::ostream &out, const cyme::rvec<T,O> &vec){
 	vec.print(out);
 	return out;
 }
