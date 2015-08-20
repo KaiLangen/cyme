@@ -108,7 +108,7 @@ namespace cyme{
     template <class T, std::size_t Size>
     cyme::wvec<T,cyme::__GETSIMD__(),true>
     storage<T, Size, AoSoA>::operator[](cyme::rvec<integer_type,cyme::__GETSIMD__()> const& v){
-	return cyme::wvec<T,cyme::__GETSIMD__(),true>(data,v);
+	return cyme::wvec<T,cyme::__GETSIMD__(),true>(data,v.rep());
     }
 
     template <class T, std::size_t Size>

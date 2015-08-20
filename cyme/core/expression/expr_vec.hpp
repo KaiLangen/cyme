@@ -565,21 +565,22 @@ namespace cyme{
 
 
     template <bool, typename T, cyme::simd O, int N, class Rep = vec_simd<T,O,N> >
-    struct enable_if{};
+    struct enable_if{
+	void enable_scatter(Rep r);
+    };
 
-    template <typename T, cyme::simd O, int N, class Rep >
+    template <typename T, cyme::simd O, int N, class Rep>
     struct enable_if<true, T, O, N, Rep> {
+	public:
         typedef typename trait_integer<T>::integer integer_type;
-        typedef T* pointer; 
 
-	enable_if(cyme::vec_simd<integer_type,O,N> const& u, pointer rb):v(u),expr_rep(rb){}
-	~enable_if(){
-	    gather(expr_rep, v.rep());
-	}
+	enable_if(cyme::vec_simd<integer_type,O,N> const& u):v(u){}
 
-    public: 
-	cyme::vec_simd<integer_type,O,N> v;
-	Rep expr_rep;
+	void enable_scatter(Rep r){
+	    scatter<T,O,N>(r,v);
+	};
+
+	cyme::vec_simd<integer_type,O,N> const& v;
     };
 
 
@@ -614,7 +615,10 @@ namespace cyme{
         If not rewrite this command after the tree creation into the +=, *=, etc ....
         */
 	~wvec(){
-	    expr_rep.store(data_pointer); //store the SIMD register into main cyme
+	    if(B)
+		this->enable_scatter(expr_rep);
+	    else
+		expr_rep.store(data_pointer); //store the SIMD register into main cyme
 	}
 
         /**
