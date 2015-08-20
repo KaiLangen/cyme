@@ -607,7 +607,7 @@ namespace cyme{
         }
 
 	/**constructor rhs for the gather/scatter */
-	forceinline explicit wvec(pointer rb, cyme::vec_simd<integer_type,O,N> const& u):enable_if<B,T,O,N>(u),expr_rep(rb){
+	forceinline explicit wvec(pointer rb, cyme::vec_simd<integer_type,O,N> const& u):enable_if<B,T,O,N>(u),data_pointer(rb),expr_rep(rb){
 	}
 
         /**
