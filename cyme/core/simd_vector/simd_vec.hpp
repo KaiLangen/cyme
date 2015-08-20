@@ -181,7 +181,8 @@ namespace cyme{
 
     /** Free function for scatter */
     template<class T,cyme::simd O, int N>
-    void scatter(typename simd_trait<T,O,N>::const_pointer a, vec_simd<typename trait_integer<T>::integer,O,N> const& v);
+    void scatter(typename simd_trait<T,O,N>::pointer dst, vec_simd<T,O,N> const& src, 
+							  vec_simd<typename trait_integer<T>::integer,O,N> const& v);
 
     /** Free function for call the reciprocal for the Newton-Raphson division (initialization only) */
     template<class T,cyme::simd O, int N>

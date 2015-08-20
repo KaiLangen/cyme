@@ -566,7 +566,7 @@ namespace cyme{
 
     template <bool, typename T, cyme::simd O, int N, class Rep = vec_simd<T,O,N> >
     struct enable_if{
-	void enable_scatter(Rep r);
+	void enable_scatter(T* p, Rep r);
     };
 
     template <typename T, cyme::simd O, int N, class Rep>
@@ -576,8 +576,8 @@ namespace cyme{
 
 	enable_if(cyme::vec_simd<integer_type,O,N> const& u):v(u){}
 
-	void enable_scatter(Rep r){
-	    scatter<T,O,N>(r,v);
+	void enable_scatter(T* p, Rep const& r){
+	    scatter<T,O,N>(p,r,v);
 	};
 
 	cyme::vec_simd<integer_type,O,N> const& v;
@@ -607,7 +607,7 @@ namespace cyme{
         }
 
 	/**constructor rhs for the gather/scatter */
-	forceinline explicit wvec(pointer rb, cyme::vec_simd<integer_type,O,N> const& u):enable_if<B,T,O,N>(u,rb),expr_rep(rb){
+	forceinline explicit wvec(pointer rb, cyme::vec_simd<integer_type,O,N> const& u):enable_if<B,T,O,N>(u),expr_rep(rb){
 	}
 
         /**
@@ -616,7 +616,7 @@ namespace cyme{
         */
 	~wvec(){
 	    if(B)
-		this->enable_scatter(expr_rep);
+		this->enable_scatter(data_pointer,expr_rep);
 	    else
 		expr_rep.store(data_pointer); //store the SIMD register into main cyme
 	}

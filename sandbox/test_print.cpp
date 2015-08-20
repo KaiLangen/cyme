@@ -65,10 +65,14 @@ int main(int argc, char *argv[]){
     {
         cyme::vector<synapse<int,6>,cyme::AoSoA>::const_iterator it1 = b_AOSOA.begin();
         cyme::vector<synapse<float,6>,cyme::AoSoA>::const_iterator it2 = c_AOSOA.begin();
+        cyme::vector<synapse<float,6>,cyme::AoSoA>::iterator it3 = c_AOSOA.begin();
 
         std::cout << (*it2)[0] << std::endl;
         std::cout << (*it1)[0] << std::endl;
-        std::cout << (*it2)[(*it1)[0]] << std::endl;
+        std::cout << (*it2)[(*it1)[0]] << std::endl << std::endl;
+        //std::cout << (*it3)[1] << std::endl;
+        (*it3)[(*it1)[0]] = (*it2)[1];
+        //std::cout << (*it3)[(*it1)[0]] << std::endl << std::endl;
     }
     {
         cyme::vector<synapse<int,6>,cyme::AoS>::const_iterator it1 = b_AOS.begin();

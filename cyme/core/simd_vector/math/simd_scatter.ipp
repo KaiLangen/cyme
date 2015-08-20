@@ -26,57 +26,56 @@
  * Implements scatter for vec_simd class
  */
 
-#ifndef CYME_SIMD_GATHER_IPP
-#define CYME_SIMD_GATHER_IPP
+#ifndef CYME_SIMD_SCATTER_IPP
+#define CYME_SIMD_SCATTER_IPP
 
-#define __UINT__ typename trait_integer<T>::integer
+#define integer_type typename trait_integer<T>::integer
 
 namespace cyme{
     template<class T,cyme::simd O, int N>
     struct cyme_scatter{
-        static forceinline vec_simd<T,O,N> scatter(typename simd_trait<T,O,N>::const_pointer a, vec_simd<__UINT__,O,N> const& v){
+	static void scatter(typename simd_trait<T,O,N>::pointer dst, vec_simd<T,O,N> const& src, vec_simd<integer_type,O,N> const& v){
             const std::size_t size = elems_helper<T,N>::size;
             T elems[size] __attribute__((aligned(static_cast<std::size_t>(cyme::trait_register<T,cyme::__GETSIMD__()>::size))));
-            __UINT__ V[size] __attribute__((aligned(static_cast<std::size_t>(cyme::trait_register<T,cyme::__GETSIMD__()>::size))));
-	    _mm_store<__UINT__,O,N>(v.xmm,V);
+            integer_type V[size] __attribute__((aligned(static_cast<std::size_t>(cyme::trait_register<T,cyme::__GETSIMD__()>::size))));
+	    _mm_store<T,O,N>(src.xmm,elems);
+	    _mm_store<integer_type,O,N>(v.xmm,V);
             for(std::size_t i = 0; i < size; i++){
 		assert(V[i] < size);
-		elems[V[i]] = a[i];
+		dst[V[i]] = elems[i];
             }	
-            vec_simd<T,O,N> nrv(_mm_load<typename simd_trait<T,O,N>::value_type,O,N>(elems));
-            return nrv;
 	}
     };
  
     /** Free function for call the vendor scatter */
     template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> scatter_v(typename simd_trait<T,O,N>::const_pointer a, vec_simd<__UINT__,O,N> const& v){
-        vec_simd<T,O,N> nrv(_mm_scatter<T,O,N>(a,v.xmm));
-        return nrv;
+    void scatter_v(typename simd_trait<T,O,N>::pointer dst, vec_simd<T,O,N> const& src, vec_simd<integer_type,O,N> const& v){
+        _mm_scatter<T,O,N>(dst,src.xmm,v.xmm);
     }
 
     /** Function object for the vendor scatter algorithm */
     template<class T,cyme::simd O, int N>
     struct Vendor_scatter{
-        static forceinline vec_simd<T,O,N> scatter(typename simd_trait<T,O,N>::const_pointer a, vec_simd<__UINT__,O,N> const& v){
-            return scatter_v(a,v); /* call vendor wrapper */
+	static void scatter(typename simd_trait<T,O,N>::pointer dst, vec_simd<T,O,N> const& src, vec_simd<integer_type,O,N> const& v){
+            scatter_v(dst,src,v); /* call vendor wrapper */
         }
     };
 
     /** Selector for the scatter algorithm (vendor or cyme implementation) */
     template<class T,cyme::simd O, int N, class Solver = cyme_scatter<T,O,N> >
     struct Selector_scatter{
-         static forceinline vec_simd<T,O,N> scatter(typename simd_trait<T,O,N>::const_pointer a, vec_simd<__UINT__,O,N> const& v){
-               return Solver::scatter(a,v);
+	static void scatter(typename simd_trait<T,O,N>::pointer dst, vec_simd<T,O,N> const& src, vec_simd<integer_type,O,N> const& v){
+               Solver::scatter(dst,src,v);
          }
     };
 
-    /** free function for scatter */
+    /** Free function for scatter */
     template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> scatter(typename simd_trait<T,O,N>::const_pointer a, vec_simd<__UINT__,O,N> const& v){
-        return Selector_scatter<T,O,N>::scatter(a,v);
+    void scatter(typename simd_trait<T,O,N>::pointer dst, vec_simd<T,O,N> const& src,
+							  vec_simd<typename trait_integer<T>::integer,O,N> const& v){
+        Selector_scatter<T,O,N>::scatter(dst,src,v);
     }
 }
 
-#undef __UINT__
+#undef integer_type
 #endif
