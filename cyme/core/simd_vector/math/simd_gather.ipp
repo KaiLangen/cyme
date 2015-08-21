@@ -39,7 +39,7 @@ namespace cyme{
             integer_type V[size] __attribute__((aligned(static_cast<std::size_t>(cyme::trait_register<T,cyme::__GETSIMD__()>::size))));
 	    _mm_store<integer_type,O,N>(v.xmm,V);
             for(std::size_t i = 0; i < size; i++){
-		assert(V[i] < size);
+//		assert(V[i] < size);
 		elems[i] = a[V[i]];
             }	
             vec_simd<T,O,N> nrv(_mm_load<typename simd_trait<T,O,N>::value_type,O,N>(elems));

@@ -70,6 +70,16 @@ namespace cyme {
     double GetRandom<double>(){
         return Randomdouble(rng);
     }
+ 
+    template<>
+    std::size_t GetRandom<std::size_t>(){
+        return rand()%6;
+    }
+    
+    template<>
+    int GetRandom<int>(){
+        return rand()%6;
+    }
     
     template<class T>
     T GetRandomExp10();

@@ -23,6 +23,7 @@
 using namespace cyme::test;
 
 #define TYPE typename T::value_type
+#define INT_TYPE typename cyme::trait_integer<typename T::value_type>::integer
 #define N T::n
 #define ORDER T::order
 
@@ -178,6 +179,67 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vector_operator_equal_multiple, T, floating_point_
     check(vector_a, vector_b);
 }
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(vector_gather_test, T, floating_point_block_types) {
+    cyme::vector<synapse<TYPE,N>,cyme::AoS> vector_a(1024);
+    cyme::vector<synapse<INT_TYPE,N>,cyme::AoS> vector_ai(1024);
+    cyme::vector<synapse<TYPE,N>,cyme::AoSoA> vector_b(1024);
+    cyme::vector<synapse<INT_TYPE,N>,cyme::AoSoA> vector_bi(1024);
+
+    init(vector_a, vector_b);
+    init(vector_ai, vector_bi);
+
+    typename cyme::vector<synapse<TYPE,N>,cyme::AoS>::iterator it_AoS = vector_a.begin();
+    typename cyme::vector<synapse<INT_TYPE,N>,cyme::AoS>::const_iterator it_iAoS = vector_ai.begin();
+    for(; it_AoS != vector_a.end(); ++it_AoS,++it_iAoS){
+        (*it_AoS)[(*it_iAoS)[0]] = (*it_AoS)[(*it_iAoS)[0]];
+        (*it_AoS)[(*it_iAoS)[0]] = (*it_AoS)[(*it_iAoS)[1]];
+        (*it_AoS)[(*it_iAoS)[0]] = (*it_AoS)[(*it_iAoS)[2]];
+        (*it_AoS)[(*it_iAoS)[0]] = (*it_AoS)[(*it_iAoS)[3]];
+
+        (*it_AoS)[(*it_iAoS)[1]] = (*it_AoS)[(*it_iAoS)[0]];
+        (*it_AoS)[(*it_iAoS)[1]] = (*it_AoS)[(*it_iAoS)[1]];
+        (*it_AoS)[(*it_iAoS)[1]] = (*it_AoS)[(*it_iAoS)[2]];
+        (*it_AoS)[(*it_iAoS)[1]] = (*it_AoS)[(*it_iAoS)[3]];
+
+        (*it_AoS)[(*it_iAoS)[2]] = (*it_AoS)[(*it_iAoS)[0]];
+        (*it_AoS)[(*it_iAoS)[2]] = (*it_AoS)[(*it_iAoS)[1]];
+        (*it_AoS)[(*it_iAoS)[2]] = (*it_AoS)[(*it_iAoS)[2]];
+        (*it_AoS)[(*it_iAoS)[2]] = (*it_AoS)[(*it_iAoS)[3]];
+
+        (*it_AoS)[(*it_iAoS)[3]] = (*it_AoS)[(*it_iAoS)[0]];
+        (*it_AoS)[(*it_iAoS)[3]] = (*it_AoS)[(*it_iAoS)[1]];
+        (*it_AoS)[(*it_iAoS)[3]] = (*it_AoS)[(*it_iAoS)[2]];
+        (*it_AoS)[(*it_iAoS)[3]] = (*it_AoS)[(*it_iAoS)[3]];
+    }
+
+    typename cyme::vector<synapse<TYPE,N>,cyme::AoSoA>::iterator it_AoSoA_w = vector_b.begin();
+    typename cyme::vector<synapse<TYPE,N>,cyme::AoSoA>::const_iterator it_AoSoA_r = vector_b.begin();
+    typename cyme::vector<synapse<INT_TYPE,N>,cyme::AoSoA>::const_iterator it_iAoSoA_r = vector_bi.begin();
+    for(; it_AoSoA_r != vector_b.end(); ++it_AoSoA_w,++it_AoSoA_r,++it_iAoSoA_r){
+        (*it_AoSoA_w)[(*it_iAoSoA_r)[0]] = (*it_AoSoA_r)[(*it_iAoSoA_r)[0]];
+        (*it_AoSoA_w)[(*it_iAoSoA_r)[0]] = (*it_AoSoA_r)[(*it_iAoSoA_r)[1]];
+        (*it_AoSoA_w)[(*it_iAoSoA_r)[0]] = (*it_AoSoA_r)[(*it_iAoSoA_r)[2]];
+        (*it_AoSoA_w)[(*it_iAoSoA_r)[0]] = (*it_AoSoA_r)[(*it_iAoSoA_r)[3]];
+
+        (*it_AoSoA_w)[(*it_iAoSoA_r)[1]] = (*it_AoSoA_r)[(*it_iAoSoA_r)[0]];
+        (*it_AoSoA_w)[(*it_iAoSoA_r)[1]] = (*it_AoSoA_r)[(*it_iAoSoA_r)[1]];
+        (*it_AoSoA_w)[(*it_iAoSoA_r)[1]] = (*it_AoSoA_r)[(*it_iAoSoA_r)[2]];
+        (*it_AoSoA_w)[(*it_iAoSoA_r)[1]] = (*it_AoSoA_r)[(*it_iAoSoA_r)[3]];
+
+        (*it_AoSoA_w)[(*it_iAoSoA_r)[2]] = (*it_AoSoA_r)[(*it_iAoSoA_r)[0]];
+        (*it_AoSoA_w)[(*it_iAoSoA_r)[2]] = (*it_AoSoA_r)[(*it_iAoSoA_r)[1]];
+        (*it_AoSoA_w)[(*it_iAoSoA_r)[2]] = (*it_AoSoA_r)[(*it_iAoSoA_r)[2]];
+        (*it_AoSoA_w)[(*it_iAoSoA_r)[2]] = (*it_AoSoA_r)[(*it_iAoSoA_r)[3]];
+
+        (*it_AoSoA_w)[(*it_iAoSoA_r)[3]] = (*it_AoSoA_r)[(*it_iAoSoA_r)[0]];
+        (*it_AoSoA_w)[(*it_iAoSoA_r)[3]] = (*it_AoSoA_r)[(*it_iAoSoA_r)[1]];
+        (*it_AoSoA_w)[(*it_iAoSoA_r)[3]] = (*it_AoSoA_r)[(*it_iAoSoA_r)[2]];
+        (*it_AoSoA_w)[(*it_iAoSoA_r)[3]] = (*it_AoSoA_r)[(*it_iAoSoA_r)[3]];
+    }
+
+    check(vector_a, vector_b);
+}
+
 BOOST_AUTO_TEST_CASE_TEMPLATE(vector_operator_scalar_fma, T, floating_point_torture_list) {
     cyme::vector<synapse<TYPE,N>,cyme::AoS> vector_a(1024);
     cyme::vector<synapse<TYPE,N>,cyme::AoSoA> vector_b(1024);
@@ -325,5 +387,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vector_operator_divideequal, T, floating_point_tor
 }
 
 #undef TYPE
+#undef INT_TYPE
 #undef N
 #undef ORDER

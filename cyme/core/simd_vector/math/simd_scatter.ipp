@@ -41,7 +41,7 @@ namespace cyme{
 	    _mm_store<T,O,N>(src.xmm,elems);
 	    _mm_store<integer_type,O,N>(v.xmm,V);
             for(std::size_t i = 0; i < size; i++){
-		assert(V[i] < size);
+//		assert(V[i] < size);
 		dst[V[i]] = elems[i];
             }	
 	}
